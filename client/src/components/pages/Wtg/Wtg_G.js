@@ -1,13 +1,13 @@
 import React from "react";
 import '../../App.css';
-import CardsWtg from '../commons/Cards/Cards Wtg';
+import CardsWtg_G from '../commons/Cards/Cards Wtg_G';
 
 export default function Wtg() {
     return <h1 className=''>
+       
 
 
 
-
-        <CardsWtg />
+        <CardsWtg_G />
     </h1>;
 }

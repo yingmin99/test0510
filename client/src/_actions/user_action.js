@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOGIN_USER, REGISTER_USER, AUTH_USER } from "./types";
+import { LOGIN_USER, NAVER_LOGIN_USER, REGISTER_USER, AUTH_USER } from "./types";
 
 export function loginUser(dataToSubmit) {
     const request = axios.post('/api/users/login', dataToSubmit)
@@ -7,6 +7,16 @@ export function loginUser(dataToSubmit) {
 
     return {
         type: LOGIN_USER,
+        payload: request
+    }
+}
+
+export function naverLoginUser(dataToSubmit) {
+    const request = axios.post('/api/users/naverLogin', dataToSubmit)
+        .then(response => response.data)
+
+    return {
+        type: NAVER_LOGIN_USER,
         payload: request
     }
 }

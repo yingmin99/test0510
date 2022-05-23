@@ -11,9 +11,15 @@ import SignUp from './pages/SignUp/SignUp';
 import Community from './pages/Community/Community';
 import Store from './pages/Store/Store';
 import Wtg from './pages/Wtg/Wtg';
+
+import Wtg_G from './pages/Wtg/Wtg_G';
+import Wtg01 from './pages/Wtg/Wtg_G_01';
+import Wtg_T from './pages/Wtg/Wtg_T';
+import Wtg_W from './pages/Wtg/Wtg_W';
+
 import SignIn from './pages/SignIn/General/SignIn';
 import Profile from './pages/Profile/Profile';
-import Naver from './pages/SignIn/Naver/Naver';
+import Callback from './pages/SignIn/Naver/Callback';
 
 function App() {
   // BottomNavbar on, off
@@ -46,13 +52,17 @@ function App() {
           <Route path='/community' element={<Community />} />
           <Route path='/store' element={<Store />} />
           <Route path='/wtg' element={<Wtg />} />
+          <Route path='/wtg_g' element={<Wtg_G />} />
+          <Route path='/wtg_t' element={<Wtg_T />} />
+          <Route path='/wtg_w' element={<Wtg_W />} />
+          <Route path='/wtg01' element={<Wtg01 />} />
           <Route path='/profile' element={<Profile />} />
           {/* 추가 */}
           <Route path='/services' element={<Services />} />
           <Route path='/products' element={<Products />} />
           <Route path='/sign-up' element={<SignUp />} />
           <Route path='/sign-in' element={<SignIn />} />
-          <Route path='/auth/naver/callback' element={<Naver />} />
+          <Route path='/auth/naver/callback' element={<Callback />} />
         </Routes>
         {bottomNavbar && <BottomNavbar />}
       </Router>

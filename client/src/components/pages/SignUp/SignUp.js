@@ -48,7 +48,7 @@ function SignUp() {
             <Formik
                 initialValues={{
                     email: '',
-                    lastName: '',
+                    Nickname: '',
                     name: '',
                     password: '',
                     confirmPassword: ''
@@ -56,8 +56,8 @@ function SignUp() {
                 validationSchema={Yup.object().shape({
                     name: Yup.string()
                         .required('Name is required'),
-                    lastName: Yup.string()
-                        .required('Last Name is required'),
+                    Nickname: Yup.string()
+                        .required('Nickname is required'),
                     email: Yup.string()
                         .email('Email is invalid')
                         .required('Email is required'),
@@ -75,7 +75,7 @@ function SignUp() {
                             email: values.email,
                             password: values.password,
                             name: values.name,
-                            lastName: values.lastName,
+                            Nickname: values.Nickname,
                             image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
                         };
 
@@ -125,20 +125,20 @@ function SignUp() {
                                     )}
                                 </Form.Item>
 
-                                <Form.Item required label="Last Name">
+                                <Form.Item required label="Nickname">
                                     <Input
-                                        id="lastName"
-                                        placeholder="Enter your Last Name"
+                                        id="Nickname"
+                                        placeholder="Enter your Nickname"
                                         type="text"
-                                        value={values.lastName}
+                                        value={values.Nickname}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className={
-                                            errors.lastName && touched.lastName ? 'text-input error' : 'text-input'
+                                            errors.Nickname && touched.Nickname ? 'text-input error' : 'text-input'
                                         }
                                     />
-                                    {errors.lastName && touched.lastName && (
-                                        <div className="input-feedback">{errors.lastName}</div>
+                                    {errors.Nickname && touched.Nickname && (
+                                        <div className="input-feedback">{errors.Nickname}</div>
                                     )}
                                 </Form.Item>
 

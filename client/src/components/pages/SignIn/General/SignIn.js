@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Auth from "../../../../hoc/auth";
 import Kakao from "../Kakao/Kakao";
-// import Naver from 'react-naver-login';
+import Naver from "../Naver/Naver";
 
 const { Title } = Typography;
 
@@ -154,13 +154,7 @@ function SignIn() {
                 }}
             </Formik>
             <Kakao />
-            {/* <Naver
-                clientId="DNvyuXQ14_LqW1t7FBfQ"
-                callbackUrl="http://127.0.0.1:3001/auth/naver/callback"
-                render={(props) => <div onClick={props.onClick}>Naver Login</div>}
-                onSuccess={(naverUser) => console.log(naverUser)}
-                onFailure={(result) => console.error(result)}
-            /> */}
+            <Naver />
         </>
     );
 };

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
 const { auth } = require("../middleware/auth");
+const axios = require('axios');
 
 //=================================
 //             User
@@ -22,7 +23,6 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    //console.log(req.body);
     if (req.body.oAuthId) { // 소셜 계정으로 로그인시
         //요청 body에 oAuthId 키가 존재하는지 체크한다.
         //만일 존재한다면, DB에 해당 oAuthId를 갖고있는 유저를 탐색한다.
@@ -31,29 +31,36 @@ router.post('/login', (req, res) => {
                 const userSchema = new User(req.body);
                 // 계정 생성
                 userSchema.save((err, userInfo) => {
-                    //  console.log("카카오 계정 생성 완료.");
+                    userInfo.generateToken((err, user) => {
+                        if (err) return res.status(400).send(err);
+                        // save Token at Cookie
+                        res.cookie("x_auth", user.token) //쿠키에 JWT토큰을 넣어준다.
+                            .status(200)
+                            .json({
+                                loginSuccess: true,
+                                userId: user._Id,
+                                token: user.token
+                            });
+                    });
                     if (err) return res.json({
-                        success: false,
+                        registerSuccess: false,
                         err
                     });
-                    return res.status(200).json({
-                        registerSuccess: true,
-                    });
+                });
+            } else {
+                //JWT 토큰 발급
+                user.generateToken((err, user) => {
+                    if (err) return res.status(400).send(err);
+                    // save Token at Cookie
+                    res.cookie("x_auth", user.token) //쿠키에 JWT토큰을 넣어준다.
+                        .status(200)
+                        .json({
+                            loginSuccess: true,
+                            userId: user._Id,
+                            token: user.token
+                        });
                 });
             }
-
-            //JWT 토큰 발급
-            user.generateToken((err, user) => {
-                if (err) return res.status(400).send(err);
-                // save Token at Cookie
-                res.cookie("x_auth", user.token) //쿠키에 JWT토큰을 넣어준다.
-                    .status(200)
-                    .json({
-                        loginSuccess: true,
-                        userId: user._Id,
-                        token: user.token
-                    });
-            });
         });
         return;
     } else { //일반 계정으로 로그인시
@@ -93,6 +100,79 @@ router.post('/login', (req, res) => {
     }
 });
 
+router.post('/naverLogin', (req, res) => {
+
+    const genToken = () => User.findOne({ oAuthId: response.oAuthId }, (err, user) => {
+        if (!user) {
+            const userSchema = new User(response);
+            // 계정 생성
+            userSchema.save((err, userInfo) => {
+                userInfo.generateToken((err, user) => {
+                    console.log('유저 없음:' + user);
+                    if (err) return res.status(400).send(err);
+                    // save Token at Cookie
+                    res.cookie("x_auth", user.token) //쿠키에 JWT토큰을 넣어준다.
+                        .status(200)
+                        .json({
+                            loginSuccess: true,
+                            userId: user._Id,
+                            token: user.token
+                        });
+                });
+                if (err) return res.json({
+                    registerSuccess: false,
+                    err
+                });
+            });
+        } else {
+            //JWT 토큰 발급
+            user.generateToken((err, user) => {
+                if (err) return res.status(400).send(err);
+                // save Token at Cookie
+                res.cookie("x_auth", user.token) //쿠키에 JWT토큰을 넣어준다.
+                    .status(200)
+                    .json({
+                        loginSuccess: true,
+                        userId: user._id,
+                        token: user.token
+                    });
+            });
+        }
+    });
+
+    let response = null;
+    // 가져온 토큰을 네이버 로그인 api에 전달하기.
+
+    async function getUserInfo() {
+        try {
+            const res = await axios.get('https://openapi.naver.com/v1/nid/me', {
+                headers: {
+                    'User-Agent': 'curl/7.12.1(i686-redhat-linux-gnu) libcurl/7.12.1 OpenSSL/0.9.7a zlib/1.2.1.2 libidn/0.5.6',
+                    'Host': 'openapi.naver.com',
+                    'Pragma': 'no-cache',
+                    'Accept': '*/*',
+                    'X-Naver-Client-Id': req.body.NAVER_JAVASCRIPT_KEY,
+                    'X-Naver-Client-Secret': req.body.NAVER_JAVASCRIPT_SECRET,
+                    'Authorization': 'Bearer ' + req.body.token //the token is a variable which holds the token
+                }
+            })
+            response = {
+                oAuthId: res.data.response.id,
+                name: res.data.response.name,
+                Nickname: res.data.response.nickname,
+                email: res.data.response.email,
+                image: res.data.response.profile_image,
+            }
+            genToken();
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    getUserInfo();
+});
+
 router.get('/auth', auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
@@ -100,7 +180,7 @@ router.get('/auth', auth, (req, res) => {
         isAuth: true,
         email: req.user.email,
         name: req.user.name,
-        lastName: req.user.lastName,
+        Nickname: req.user.Nickname,
         role: req.user.role,
         image: req.user.image,
     });

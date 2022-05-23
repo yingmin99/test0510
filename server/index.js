@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+
 const config = require('./config/key');
 const mongoose = require('mongoose');
 mongoose.connect(config.mongoURI).then(() => console.log('MongoDB Connected...'))
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
   });
 }
+
 
 app.listen(port, () => {
   console.log(`Dev app listening on port ${port}`)

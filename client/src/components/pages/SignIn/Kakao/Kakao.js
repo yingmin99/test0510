@@ -33,15 +33,13 @@ const Kakao = () => {
     const [formErrorMessage, setFormErrorMessage] = useState('')
 
     const oAuthLoginHandler = (values) => {
-        //   console.log("values : " + JSON.stringify(values));
         let dataToSubmit = {
-            oAuthId: values.profile,
+            oAuthId: values.profile.id,
             name: values.profile.properties.nickname,
-            lastName: values.profile.properties.nickname,
+            Nickname: values.profile.properties.nickname,
             email: values.profile.kakao_account.email,
             image: values.profile.properties.profile_image,
         };
-        //   console.log("dataToSubmit : " + JSON.stringify(dataToSubmit));
 
         dispatch(loginUser(dataToSubmit))
             .then(response => {

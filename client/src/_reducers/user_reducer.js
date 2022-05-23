@@ -1,4 +1,4 @@
-import { LOGIN_USER, REGISTER_USER, AUTH_USER } from "../_actions/types";
+import { LOGIN_USER, REGISTER_USER, AUTH_USER, NAVER_LOGIN_USER } from "../_actions/types";
 
 const reducer = (state = {}, action) => {
     switch (action.type) {
@@ -8,6 +8,8 @@ const reducer = (state = {}, action) => {
             return { ...state, register: action.payload }
         case AUTH_USER:
             return { ...state, userData: action.payload }
+        case NAVER_LOGIN_USER:
+            return { ...state, loginSuccess: action.payload }
         default:
             return state;
     }
